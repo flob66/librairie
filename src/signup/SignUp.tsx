@@ -35,7 +35,7 @@ const SignUp: React.FC<SignUpProps> = ({ onSignUp, onSwitchToLogin, users }) => 
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       /><br />
-      <button onClick={handleSignUp}>Sign Up</button>
+      <button onClick={handleSignUp}>S'inscrire</button>
       <p>Déjà un compte ? <a href="#" onClick={onSwitchToLogin}>Se connecter</a></p>
     </div>
   );
