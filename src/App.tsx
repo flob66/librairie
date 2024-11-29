@@ -2,10 +2,22 @@ import React, { useState } from 'react';
 import './App.css';
 import Login from './login/login';
 import SignUp from './signup/SignUp';
+import AdminPage from './admin/AdminPage';
+import UserPage from './user/UserPage';
 
 interface User {
   username: string;
   password: string;
+}
+
+interface Book {
+  id: number;
+  titre: string;
+  auteur: string;
+  description: string;
+  maisonEdition: string;
+  stock: number;
+  creator: string;
 }
 
 function App() {
@@ -13,6 +25,7 @@ function App() {
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [showSignUp, setShowSignUp] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
 
   const handleAddUser = (newUser: User) => {
     setUsers((prevUsers) => [...prevUsers, newUser]);
@@ -42,7 +55,11 @@ function App() {
           )
         ) : (
           <div>
-            <h1>Bonjour, {currentUser}!</h1>
+            {currentUser === 'admin' ? (
+              <AdminPage books={books} setBooks={setBooks} currentUser={currentUser} />
+            ) : (
+              <UserPage username={currentUser} books={books} setBooks={setBooks} />
+            )}
             <button onClick={() => setIsLoggedIn(false)}>Se déconnecter</button>
           </div>
         )}

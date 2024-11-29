@@ -12,17 +12,24 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToSignUp, users }) => {
   const [error, setError] = useState('');
 
   const handleLogin = () => {
+    // Check for admin login
+    if (username === 'admin' && password === 'admin1') {
+      onLogin('admin');
+      return;
+    }
+
+    // Check for other users
     const user = users.find((u) => u.username === username && u.password === password);
     if (user) {
       onLogin(username);
     } else {
-      setError("Nom d'utilisateur ou mot de passe incorrect");
+      setError('Invalid username or password');
     }
   };
 
   return (
     <div>
-      <h2>Se connecter</h2>
+      <h2>Login</h2>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <input
         type="text"
@@ -36,8 +43,8 @@ const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToSignUp, users }) => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       /><br />
-      <button onClick={handleLogin}>Se connecter</button>
-      <p>Vous n'avez pas de compte ? <a href="#" onClick={onSwitchToSignUp}>S'inscrire</a></p>
+      <button onClick={handleLogin}>Login</button>
+      <p>Don't have an account? <a href="#" onClick={onSwitchToSignUp}>Sign Up</a></p>
     </div>
   );
 };
