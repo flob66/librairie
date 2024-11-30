@@ -1,42 +1,42 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 interface SignUpProps {
   onSignUp: (newUser: { username: string; password: string }) => void;
   onSwitchToLogin: () => void;
-  users: { username: string; password: string }[];
 }
 
-const SignUp: React.FC<SignUpProps> = ({ onSignUp, onSwitchToLogin, users }) => {
+const SignUp: React.FC<SignUpProps> = ({ onSignUp, onSwitchToLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   const handleSignUp = () => {
-    if (users.some((u) => u.username === username)) {
-      setMessage("Le nom d'utilisateur existe déjà");
-    } else {
+    if (username && password) {
       onSignUp({ username, password });
+    } else {
+      setError('Les deux champs sont requis');
     }
   };
 
   return (
     <div>
-      <h2>S'inscrire</h2>
-      {message && <p style={{ color: 'red' }}>{message}</p>}
+      <h2>Inscription</h2>
       <input
         type="text"
-        placeholder="Username"
+        placeholder="Nom d'utilisateur"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       /><br />
       <input
         type="password"
-        placeholder="Password"
+        placeholder="Mot de passe"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       /><br />
       <button onClick={handleSignUp}>S'inscrire</button>
-      <p>Déjà un compte ? <a href="#" onClick={onSwitchToLogin}>Se connecter</a></p>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <p>Déjà un compte ? <button onClick={onSwitchToLogin}>Connectez-vous</button></p>
     </div>
   );
 };

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './App.css';
 import Login from './login/login';
 import SignUp from './signup/SignUp';
@@ -24,12 +25,16 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
   const [showSignUp, setShowSignUp] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
 
-  const handleAddUser = (newUser: User) => {
-    setUsers((prevUsers) => [...prevUsers, newUser]);
-    setCurrentUser(newUser.username);
+  useEffect(() => {
+    axios.get('http://localhost:5000/books')
+      .then((response) => setBooks(response.data))
+      .catch((error) => console.error('Erreur lors de la récupération des livres:', error));
+  }, []);
+
+  const handleLogin = (username: string) => {
+    setCurrentUser(username);
     setIsLoggedIn(true);
   };
 
@@ -39,18 +44,17 @@ function App() {
         {!isLoggedIn ? (
           showSignUp ? (
             <SignUp
-              onSignUp={handleAddUser}
+              onSignUp={(newUser) => {
+                axios.post('http://localhost:5000/users', newUser)
+                  .then(() => handleLogin(newUser.username))
+                  .catch((error) => console.error('Erreur lors de l\'ajout de l\'utilisateur:', error));
+              }}
               onSwitchToLogin={() => setShowSignUp(false)}
-              users={users}
             />
           ) : (
             <Login
-              onLogin={(user) => {
-                setCurrentUser(user);
-                setIsLoggedIn(true);
-              }}
+              onLogin={(user) => handleLogin(user)}
               onSwitchToSignUp={() => setShowSignUp(true)}
-              users={users}
             />
           )
         ) : (
@@ -60,7 +64,7 @@ function App() {
             ) : (
               <UserPage username={currentUser} books={books} setBooks={setBooks} />
             )}
-            <button onClick={() => setIsLoggedIn(false)}>Se déconnecter</button>
+            <button onClick={() => setIsLoggedIn(false)}>Déconnexion</button>
           </div>
         )}
       </header>
