@@ -47,74 +47,69 @@ describe('Authentication API', () => {
   });
 });
 
-
 describe('Books CRUD API', () => {
-    let bookId: number;
-  
-    it('should create a new book', async () => {
-      const newBook = {
-        titre: 'Le Petit Prince',
-        auteur: 'Antoine de Saint-Exupéry',
-        description: 'A charming tale about a young prince',
-        maisonEdition: 'Gallimard',
-        stock: 10,
-        creator: 'admin',
-      };
-  
-      const response = await request(app)
-        .post('/books')
-        .send(newBook);
-  
-      expect(response.status).toBe(201);
-      expect(response.body.titre).toBe('Le Petit Prince');
-      bookId = response.body.id; // Save for future tests
-    });
-  
-    // Read (GET)
-    it('should retrieve the list of books', async () => {
-      const response = await request(app)
-        .get('/books');
-  
-      expect(response.status).toBe(200);
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBeGreaterThan(0);
-    });
-  
-    // Update (PUT)
-    it('should update an existing book', async () => {
-      const updatedBook = {
-        titre: 'Le Petit Prince - Revised',
-        auteur: 'Antoine de Saint-Exupéry',
-        description: 'A revised version of the charming tale',
-        maisonEdition: 'Gallimard',
-        stock: 15,
-        creator: 'admin',
-      };
-  
-      const response = await request(app)
-        .put(`/books/${bookId}`)
-        .send(updatedBook);
-  
-      expect(response.status).toBe(200);
-      expect(response.body.titre).toBe('Le Petit Prince - Revised');
-      expect(response.body.stock).toBe(15);
-    });
-  
-    // Delete (DELETE)
-    it('should delete a book', async () => {
-      const response = await request(app)
-        .delete(`/books/${bookId}`);
-  
-      expect(response.status).toBe(204);
-    });
-  
-    // Verify Deletion
-    it('should not find the deleted book', async () => {
-      const response = await request(app)
-        .get('/books');
-  
-      const deletedBook = response.body.find((book: any) => book.id === bookId);
-      expect(deletedBook).toBeUndefined();
-    });
+  let bookId: number;
+
+  it('devrait créer un nouveau livre', async () => {
+    const newBook = {
+      titre: 'Le Petit Prince',
+      auteur: 'Antoine de Saint-Exupéry',
+      description: 'A charming tale about a young prince',
+      maisonEdition: 'Gallimard',
+      stock: 10,
+      creator: 'admin',
+    };
+
+    const response = await request(app)
+      .post('/books')
+      .send(newBook);
+
+    expect(response.status).toBe(201);
+    expect(response.body.titre).toBe('Le Petit Prince');
+    bookId = response.body.id;
   });
-  
+
+  it('devrait récupérer la liste des livres', async () => {
+    const response = await request(app)
+      .get('/books');
+
+    expect(response.status).toBe(200);
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBeGreaterThan(0);
+  });
+
+  it('devrait mettre à jour un livre existant', async () => {
+    const updatedBook = {
+      titre: 'Le Petit Prince - Revised',
+      auteur: 'Antoine de Saint-Exupéry',
+      description: 'A revised version of the charming tale',
+      maisonEdition: 'Gallimard',
+      stock: 15,
+      creator: 'admin',
+    };
+
+    const response = await request(app)
+      .put(`/books/${bookId}`)
+      .send(updatedBook);
+
+    expect(response.status).toBe(200);
+    expect(response.body.titre).toBe('Le Petit Prince - Revised');
+    expect(response.body.stock).toBe(15);
+  });
+
+  it('devrait supprimer un livre', async () => {
+    const response = await request(app)
+      .delete(`/books/${bookId}`);
+
+    expect(response.status).toBe(204);
+  });
+
+  it('ne devrait pas trouver le livre supprimé', async () => {
+    const response = await request(app)
+      .get('/books');
+
+    const deletedBook = response.body.find((book: any) => book.id === bookId);
+    expect(deletedBook).toBeUndefined();
+  });
+});
+
