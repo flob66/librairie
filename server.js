@@ -71,3 +71,5 @@ app.post('/signup', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Serveur en cours d'exécution sur http://localhost:${PORT}`);
 });
+
+module.exports = app;
