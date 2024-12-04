@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = 5000;
+const PORT = 5001;
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -69,7 +69,7 @@ app.post('/signup', (req, res) => {
   });
 
 app.listen(PORT, () => {
-  console.log(`Back-end`);
+  console.log(`Front-end`);
 });
 
 module.exports = app;
