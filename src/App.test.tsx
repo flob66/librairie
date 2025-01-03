@@ -1,5 +1,5 @@
 import supertest from 'supertest';
-import app from '../backend/server1';
+import app from '../server1';
 
 const request = supertest(app);
 

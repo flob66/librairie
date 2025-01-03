@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../backend/server';
+import app from '../server';
 
 describe('Authentication API', () => {
   it('inscription', async () => {
